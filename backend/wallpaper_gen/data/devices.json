@@ -1,0 +1,47 @@
+[
+  {
+    "device": "iPhone 17 Pro Max",
+    "width": 1320,
+    "height": 2868
+  },
+  {
+    "device": "iPhone 17 Pro",
+    "width": 1206,
+    "height": 2622
+  },
+  {
+    "device": "iPhone 17",
+    "width": 1179,
+    "height": 2556
+  },
+  {
+    "device": "iPhone 14 Pro Max / 15 Plus / 15 Pro Max / 16 Plus",
+    "width": 1290,
+    "height": 2796
+  },
+  {
+    "device": "iPhone 14 Pro / 15 / 15 Pro / 16",
+    "width": 1179,
+    "height": 2556
+  },
+  {
+    "device": "iPhone 13 Pro Max / 14 Plus",
+    "width": 1284,
+    "height": 2778
+  },
+  {
+    "device": "iPhone 13 / 13 Pro / 14",
+    "width": 1170,
+    "height": 2532
+  },
+  {
+    "device": "iPhone 13 mini",
+    "width": 1080,
+    "height": 2340
+  },
+  {
+    "device": "iPhone SE (3rd gen)",
+    "width": 750,
+    "height": 1334
+  }
+]

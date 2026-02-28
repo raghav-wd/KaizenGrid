@@ -1,0 +1,4 @@
+Flask
+Pillow
+pytz
+gunicorn
