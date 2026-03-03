@@ -33,12 +33,13 @@ export default function App() {
           animeList: data.anime || [],
         }),
       )
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Build wallpaper URL
   const buildUrl = useCallback(() => {
-    const base = window.location.origin + "/wallpaper";
+    const base = import.meta.env.VITE_BACKEND_URL + "/wallpaper";
+    console.log(base)
     const params = new URLSearchParams();
     params.set("country", config.country);
     params.set("theme", config.theme);

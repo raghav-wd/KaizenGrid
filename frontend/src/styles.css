@@ -506,6 +506,187 @@ a {
   background: #22c55e;
 }
 
+/* ── Payment Box ── */
+.payment-box {
+  margin-top: 32px;
+  padding: 28px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.payment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.payment-header h4 {
+  font-size: 15px;
+  font-weight: 600;
+}
+.payment-price {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.payment-period {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.payment-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.payment-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+.payment-features li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+.payment-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12px;
+}
+.pay-btn {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--accent);
+  color: #000;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
+}
+.pay-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.payment-error {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ── Success Box ── */
+.success-box {
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  background: rgba(34, 197, 94, 0.04) !important;
+}
+.success-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  width: fit-content;
+}
+.success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+}
+.success-header span:last-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: #22c55e;
+}
+
+/* ── Instructions Box ── */
+.instructions-box {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.25);
+}
+.instructions-box h5 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.instructions-box ol {
+  padding-left: 18px;
+  margin: 0;
+}
+.instructions-box li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+.instructions-box li strong {
+  color: #fff;
+}
+.instruction-link {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.instruction-link:hover {
+  opacity: 0.8;
+}
+.instruction-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 /* ── Setup Section ── */
 .setup {
   padding: 80px 0 100px;
@@ -562,6 +743,20 @@ a {
   color: var(--text-secondary);
   word-break: break-all;
   font-family: "SF Mono", "Fira Code", "JetBrains Mono", monospace;
+}
+.step-link {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  transition: opacity 0.2s;
+}
+.step-link:hover {
+  opacity: 0.85;
 }
 
 /* ── Footer ── */

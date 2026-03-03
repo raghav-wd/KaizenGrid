@@ -7,10 +7,14 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjpeg62-turbo-dev zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY backend/ .
+COPY . .
+
+COPY grid-wallpaper-55b580395d9a.json /app/key.json
+
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/key.json"
 
 # Cloud Run injects PORT env var (default 8080)
 ENV PORT=8080

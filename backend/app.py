@@ -1,7 +1,27 @@
 import os
+import json
 from flask import Flask, send_file, send_from_directory, request, jsonify
 from wallpaper_gen import generate_wallpaper
 from wallpaper_gen.config import COUNTRY_TIMEZONES, DEVICE_RESOLUTIONS, get_available_anime
+
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# ── Firestore init ──────────────────────────────────
+# Expects GOOGLE_APPLICATION_CREDENTIALS env var pointing to the service-account
+# JSON key file, *or* a base-64 encoded JSON in FIREBASE_CREDENTIALS env var.
+if os.environ.get('FIREBASE_CREDENTIALS'):
+    import base64
+    _cred_json = json.loads(base64.b64decode(os.environ['FIREBASE_CREDENTIALS']))
+    _cred = credentials.Certificate(_cred_json)
+elif os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+    _cred = credentials.Certificate(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+else:
+    # Default credentials (e.g. Cloud Run with attached service account)
+    _cred = credentials.ApplicationDefault()
+
+firebase_admin.initialize_app(_cred)
+db = firestore.client()
 
 # React build output lives in static/dist after `npm run build`
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static', 'dist')
@@ -22,13 +42,38 @@ def api_config():
 
 @app.route('/wallpaper')
 def get_wallpaper():
-    """Generate a wallpaper PNG from GET query parameters."""
-    country = request.args.get('country', None)
-    theme = request.args.get('theme', None)
-    accent = request.args.get('accent', None)
-    device = request.args.get('device', None)
-    quotes_param = request.args.get('quotes', 'enabled')
-    anime = request.args.get('anime', None)
+    """Generate a wallpaper PNG from GET query parameters.
+
+    If `phno` is present, the config is fetched from Firestore (paid user).
+    Otherwise the config comes from query-string params (free preview).
+    """
+    phno = request.args.get('phno', None)
+
+    if phno:
+        # ── Paid path: look up config in Firestore ──
+        doc_ref = db.collection('users').document(phno)
+        doc = doc_ref.get()
+        if not doc.exists:
+            return jsonify({'error': 'User not found'}), 404
+
+        user_data = doc.to_dict()
+        cfg = user_data.get('config', {})
+        country = cfg.get('country', None)
+        theme = cfg.get('theme', None)
+        accent = cfg.get('accent', None)
+        device = cfg.get('device', None)
+        quotes_param = cfg.get('quotes', 'enabled')
+        anime = cfg.get('anime', None)
+        preview = False
+    else:
+        # ── Free preview path: config from query string ──
+        country = request.args.get('country', None)
+        theme = request.args.get('theme', None)
+        accent = request.args.get('accent', None)
+        device = request.args.get('device', None)
+        quotes_param = request.args.get('quotes', 'enabled')
+        anime = request.args.get('anime', None)
+        preview = True
 
     quotes_enabled = quotes_param.lower() != 'disabled'
 
@@ -39,8 +84,40 @@ def get_wallpaper():
         device=device,
         quotes_enabled=quotes_enabled,
         anime=anime,
+        preview=preview,
     )
     return send_file(img_io, mimetype='image/png')
+
+
+@app.route('/api/save-user', methods=['POST'])
+def save_user():
+    """Store a user's phone number and wallpaper config in Firestore.
+
+    Expected JSON body:
+    {
+        "phone": "+919876543210",
+        "config": { "country": "...", "theme": "...", ... },
+        "paymentId": "pay_xxx",
+        "orderId": "order_xxx"
+    }
+    """
+    data = request.get_json(force=True)
+    phone = data.get('phone')
+    config = data.get('config')
+
+    if not phone or not config:
+        return jsonify({'error': 'phone and config are required'}), 400
+
+    doc_ref = db.collection('users').document(phone)
+    doc_ref.set({
+        'phone': phone,
+        'config': config,
+        'paymentId': data.get('paymentId'),
+        'orderId': data.get('orderId'),
+        'createdAt': firestore.SERVER_TIMESTAMP,
+    }, merge=True)
+
+    return jsonify({'success': True, 'phone': phone})
 
 
 # ── Serve React SPA ─────────────────────────────────

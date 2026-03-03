@@ -2,3 +2,4 @@ Flask
 Pillow
 pytz
 gunicorn
+firebase-admin

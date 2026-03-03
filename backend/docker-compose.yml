@@ -1,0 +1,9 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080" # Map host 8080 to container 8080
+    volumes:
+      - ./grid-wallpaper-55b580395d9a.json:/app/key.json # Mount the file
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/key.json # Tell Python where it is
