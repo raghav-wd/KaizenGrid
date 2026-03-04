@@ -108,14 +108,17 @@ def save_user():
     if not phone or not config:
         return jsonify({'error': 'phone and config are required'}), 400
 
-    doc_ref = db.collection('users').document(phone)
-    doc_ref.set({
-        'phone': phone,
-        'config': config,
-        'paymentId': data.get('paymentId'),
-        'orderId': data.get('orderId'),
-        'createdAt': firestore.SERVER_TIMESTAMP,
-    }, merge=True)
+    try:
+        doc_ref = db.collection('users').document(phone)
+        doc_ref.set({
+            'phone': phone,
+            'config': config,
+            'paymentId': data.get('paymentId'),
+            'orderId': data.get('orderId'),
+            'createdAt': firestore.SERVER_TIMESTAMP,
+        }, merge=True)
+    except Exception as e:
+        return jsonify({'error': f'Firestore write failed: {e}'}), 500
 
     return jsonify({'success': True, 'phone': phone})
 
