@@ -1,11 +1,11 @@
 steps:
   # Step 1: Build the container image (Note the './backend' at the end)
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/flask-app', './backend']
+    args: ['build', '-t', 'asia-south2-docker.pkg.dev/grid-wallpaper/my-repo/kaizengrid-backend', './backend']
 
   # Step 2: Push the image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/flask-app']
+    args: ['push', 'asia-south2-docker.pkg.dev/grid-wallpaper/my-repo/kaizengrid-backend']
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -13,10 +13,11 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'flask-service'
+      - 'kaizengrid-backend'
       - '--image'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/flask-app'
+      - 'asia-south2-docker.pkg.dev/grid-wallpaper/my-repo/kaizengrid-backend'
       - '--region'
-      - 'us-central1'
+      - 'asia-south2'
+      - '--allow-unauthenticated'
 options:
   logging: CLOUD_LOGGING_ONLY
