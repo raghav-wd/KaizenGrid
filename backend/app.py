@@ -6,19 +6,48 @@ from wallpaper_gen.config import COUNTRY_TIMEZONES, DEVICE_RESOLUTIONS, get_avai
 
 import firebase_admin
 from firebase_admin import credentials, firestore
+from google.cloud import secretmanager
+
+def get_secret(secret_id):
+    client = secretmanager.SecretManagerServiceClient()
+    # Replace 'your-project-id' with your actual GCP Project ID
+    project_id = "grid-wallpaper"
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
+    
+    # Access the secret version
+    response = client.access_secret_version(request={"name": name})
+    return response.payload.data.decode("UTF-8")
 
 # ── Firestore init ──────────────────────────────────
 # Expects GOOGLE_APPLICATION_CREDENTIALS env var pointing to the service-account
 # JSON key file, *or* a base-64 encoded JSON in FIREBASE_CREDENTIALS env var.
-if os.environ.get('FIREBASE_CREDENTIALS'):
-    import base64
-    _cred_json = json.loads(base64.b64decode(os.environ['FIREBASE_CREDENTIALS']))
-    _cred = credentials.Certificate(_cred_json)
-elif os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-    _cred = credentials.Certificate(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
-else:
-    # Default credentials (e.g. Cloud Run with attached service account)
-    _cred = credentials.ApplicationDefault()
+def initialize_creds():
+    # 1. Check for Base64 Env Var (Common in CI/CD or Heroku)
+    if os.environ.get('FIREBASE_CREDENTIALS'):
+        _cred_json = json.loads(base64.b64decode(os.environ['FIREBASE_CREDENTIALS']))
+        return credentials.Certificate(_cred_json)
+
+    # 2. Check GCP Secret Manager (The Gold Standard)
+    # Note: We wrap this in a try/except because get_secret might fail if 
+    # the environment isn't authenticated yet.
+    try:
+        secret_content = get_secret("kaizengrid-firestore-secret")
+        if secret_content:
+            # Secret Manager returns a string; Firebase needs a dict
+            _cred_json = json.loads(secret_content)
+            return credentials.Certificate(_cred_json)
+    except Exception as e:
+        print(f"Secret Manager not available: {e}")
+
+    # 3. Check for local file path
+    if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+        return credentials.Certificate(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+
+    # 4. Fallback to Application Default (Best for Cloud Run/App Engine)
+    # This automatically uses the identity of the server itself!
+    return credentials.ApplicationDefault()
+
+_cred = initialize_creds()
 
 firebase_admin.initialize_app(_cred)
 db = firestore.client()

@@ -12,9 +12,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-COPY grid-wallpaper-55b580395d9a.json /app/key.json
+# COPY grid-wallpaper-55b580395d9a.json /app/key.json
 
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/key.json"
+# ENV GOOGLE_APPLICATION_CREDENTIALS="/app/key.json"
 
 # Cloud Run injects PORT env var (default 8080)
 ENV PORT=8080

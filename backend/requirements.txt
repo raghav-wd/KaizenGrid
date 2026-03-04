@@ -3,3 +3,4 @@ Pillow
 pytz
 gunicorn
 firebase-admin
+google-cloud-secret-manager
