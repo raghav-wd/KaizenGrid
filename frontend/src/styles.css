@@ -280,6 +280,8 @@ a {
   .config-layout .sticky-phone {
     order: -1;
     justify-self: center;
+    position: relative;
+    top: auto;
   }
 }
 .sticky-phone {
