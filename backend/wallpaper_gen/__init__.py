@@ -101,7 +101,7 @@ def _draw_preview_watermark(img, draw, cfg):
     text = "Preview Only"
 
     # ── 1. Large horizontal text centred near the top ──
-    top_font_size = max(width // 9, 48)
+    top_font_size = max(width // 2, 48)
     top_font = _load_font(top_font_size)
     bbox = overlay_draw.textbbox((0, 0), text, font=top_font)
     tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
