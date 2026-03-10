@@ -14,7 +14,7 @@ export default function Preview({ wallpaperUrl }) {
         </div>
         <p className="section-sub" ref={ref2}>
           A wallpaper that tracks your hours, your week, and your entire year —
-          refreshed every day.
+          refreshed every hour.
         </p>
         <PhoneMock url={wallpaperUrl} maxWidth={280} />
       </div>
