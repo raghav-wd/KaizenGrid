@@ -19,7 +19,7 @@ export default {
       try {
         const { gridConfig } = await request.json();
         const auth = btoa(
-          `${env.RAZORPAY_TEST_KEY_ID}:${env.RAZORPAY_TEST_KEY_SECRET}`,
+          `${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`,
         );
 
         const razorpayResponse = await fetch(
@@ -74,7 +74,7 @@ export default {
         const encoder = new TextEncoder();
         const key = await crypto.subtle.importKey(
           "raw",
-          encoder.encode(env.RAZORPAY_TEST_KEY_SECRET),
+          encoder.encode(env.RAZORPAY_KEY_SECRET),
           { name: "HMAC", hash: "SHA-256" },
           false,
           ["sign"],
@@ -99,7 +99,7 @@ export default {
         }
 
         const auth = btoa(
-          `${env.RAZORPAY_TEST_KEY_ID}:${env.RAZORPAY_TEST_KEY_SECRET}`,
+          `${env.RAZORPAY_ID}:${env.RAZORPAY_SECRET}`,
         );
 
         // Fetch the order from Razorpay to retrieve the locked config
